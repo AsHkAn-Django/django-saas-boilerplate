@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
 
     'apps.users',
+    'apps.payments',
 
 ]
 
@@ -161,5 +162,10 @@ CORS_ALLOW_ALL_ORIGINS = True
 # Celery settings
 CELERY_BROKER_URL = config('CELERY_BROKER_URL')
 CELERY_RESULT_BACKEND = config('CELERY_BROKER_URL')
-
 CELERY_TIMEZONE = "UTC"
+
+
+# Payment Settings
+STRIPE_PUBLIC_KEY = config('STRIPE_PUBLIC_KEY')
+STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
+STRIPE_WEBHOOK_SECRET = config('STRIPE_WEBHOOK_SECRET')
