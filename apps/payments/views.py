@@ -23,7 +23,7 @@ class CreateCheckoutSessionView(APIView):
         """
         Creates a Stripe Checkout Session for upgrading to PRO membership.
         """
-        price_id = request.data.get('price_id') # We get this from the frontend
+        price_id = request.data.get('price_id', settings.STRIPE_PRICE_ID)
 
         if not price_id:
             return Response({'error': 'Price ID is required.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -57,8 +57,8 @@ def stripe_webhook(request):
     Listens for Stripe webhooks to update user subscription status automatically.
     """
     payload = request.body
-    sig_header = request.META['HTTP_STRIPE_SIGNATURE']
-    endpoint_secret = None
+    sig_header = request.META.get('HTTP_STRIPE_SIGNATURE')
+    event = None
 
     try:
         # 1. Verify that the request actually came from Stripe
@@ -73,21 +73,23 @@ def stripe_webhook(request):
         return HttpResponse(status=400)
 
     # 2. Handle the specific event: Checkout Session Completed
-    if event['type'] == 'customer.subscription.updated':
+    if event['type'] == 'checkout.session.completed':
         session = event['data']['object']
 
-        # In the next step (Checkout Logic), we will pass user.id as 'client_reference_id'
         user_id = session.get('client_reference_id')
         stripe_customer_id = session.get('customer')
         stripe_subscription_id = session.get('subscription')
 
         try:
             user = User.objects.get(id=user_id)
+
             user.stripe_customer_id = stripe_customer_id
             user.stripe_subscription_id = stripe_subscription_id
             user.is_pro_member = True
+
             user.save()
             print(f"✅ User {user.email} upgraded to PRO.")
+
         except User.DoesNotExist:
             print(f"⚠️ User with ID {user_id} not found during webhook.")
             return HttpResponse(status=404)
@@ -106,6 +108,3 @@ def stripe_webhook(request):
             pass
 
     return HttpResponse(status=200)
-
-
-
