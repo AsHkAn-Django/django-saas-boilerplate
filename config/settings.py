@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt',
+    'drf_spectacular',
 
     'apps.users',
     'apps.payments',
@@ -145,6 +146,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",
     ),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 # JWT SETTINGS
@@ -171,3 +173,12 @@ STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
 STRIPE_WEBHOOK_SECRET = config('STRIPE_WEBHOOK_SECRET')
 STRIPE_PRICE_ID = config('STRIPE_PRICE_ID', default='')
 FRONTEND_URL = config('FRONTEND_URL', default='http://localhost:3000')
+
+
+# drf-spectacular settings
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Django SaaS Boilerplate API',
+    'DESCRIPTION': 'API documentation for the Django SaaS Boilerplate project.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}
