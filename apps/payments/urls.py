@@ -4,9 +4,9 @@ from . import views
 
 urlpatterns = [
     path(
-        'create-checkout-session/',
+        "create-checkout-session/",
         views.CreateCheckoutSessionView.as_view(),
-        name='create-checkout-session'
+        name="create-checkout-session",
     ),
-    path('webhook/', views.stripe_webhook, name='stripe-webhook'),
+    path("webhook/", views.stripe_webhook, name="stripe-webhook"),
 ]

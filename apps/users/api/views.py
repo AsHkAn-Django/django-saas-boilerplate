@@ -12,10 +12,10 @@ class RegisterView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
 
-        return Response({
-            "user": {
-                "email": user.email,
-                "id": user.id
+        return Response(
+            {
+                "user": {"email": user.email, "id": user.id},
+                "message": "User created successfully.",
             },
-            "message": "User created successfully.",
-        }, status=status.HTTP_201_CREATED)
+            status=status.HTTP_201_CREATED,
+        )
