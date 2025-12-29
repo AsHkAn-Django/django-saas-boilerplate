@@ -42,9 +42,12 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "corsheaders",
+
     "rest_framework",
     "rest_framework_simplejwt",
     "drf_spectacular",
+    "djoser",
+
     "apps.users",
     "apps.payments",
 ]
@@ -173,4 +176,35 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "API documentation for the Django SaaS Boilerplate project.",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
+}
+
+
+# Email settings
+# In production, we will change this to 'smtp.EmailBackend'
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_HOST = config("EMAIL_HOST")
+EMAIL_PORT = config("EMAIL_PORT", cast=int)
+DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL")
+DOMAIN = config("DOMAIN")
+SITE_NAME = config("SITE_NAME")
+
+
+# DJOSER SETTINGS
+DJOSER = {
+    "LOGIN_FIELD": "email",
+    "USER_CREATE_PASSWORD_RETYPE": True,
+    "USERNAME_CHANGED_EMAIL_CONFIRMATION": True,
+    "PASSWORD_CHANGED_EMAIL_CONFIRMATION": True,
+    "SEND_CONFIRMATION_EMAIL": True,
+    "SET_PASSWORD_RETYPE": True,
+    "PASSWORD_RESET_CONFIRM_URL": "password/reset/confirm/{uid}/{token}",
+    "USERNAME_RESET_CONFIRM_URL": "email/reset/confirm/{uid}/{token}",
+    "ACTIVATION_URL": "activate/{uid}/{token}",
+    "SEND_ACTIVATION_EMAIL": True,
+    "SERIALIZERS": {
+        "user_create": "apps.users.api.serializers.UserCreateSerializer",
+        "user": "apps.users.api.serializers.UserSerializer",
+        "current_user": "apps.users.api.serializers.UserSerializer",
+        "user_delete": "djoser.serializers.UserDeleteSerializer",
+    },
 }

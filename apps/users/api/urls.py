@@ -1,10 +1,9 @@
-from django.urls import path
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from .views import RegisterView
-
+from django.urls import path, include
 
 urlpatterns = [
-    path("register/", RegisterView.as_view(), name="auth_register"),
-    path("login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
-    path("refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    # Djoser's default endpoints (Register, Me, Password Reset, etc.)
+    path('', include('djoser.urls')),
+
+    # JWT endpoints (Login, Refresh)
+    path('', include('djoser.urls.jwt')),
 ]
